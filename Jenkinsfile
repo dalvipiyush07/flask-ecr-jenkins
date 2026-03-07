@@ -29,11 +29,12 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                sh '''
-                aws ecr get-login-password --region ap-south-1 | \
-                docker login --username AWS --password-stdin \
-                528471666387.dkr.ecr.ap-south-1.amazonaws.com
-                '''
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ecr-credentials']]) {
+                    sh '''
+                    aws ecr get-login-password --region ap-south-1 | \
+                    docker login --username AWS --password-stdin 528471666387.dkr.ecr.ap-south-1.amazonaws.com
+                    '''
+                }
             }
         }
 
